@@ -1,1 +1,1 @@
-Script that prints the absolute path name of the current working directory.
+in this directory  you will find every script related with Shell, Basics Task 
