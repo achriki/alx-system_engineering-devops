@@ -1,0 +1,2 @@
+#!/bin/bash
+ehcho $(($TRUEKNOWLEDGE+128))
