@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#ls time
+for file in *
+do
+	if [[ ! "$file" =~ ^\..* ]]
+	then
+		i=$(echo "$file" | cut -d '-' -f 2-)
+		echo "$i"
+	fi
+done
