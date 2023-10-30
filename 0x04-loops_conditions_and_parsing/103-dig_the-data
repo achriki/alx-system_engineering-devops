@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-#check server load
-file="apache-access.log"
-awk '{print $1, $9}' $file | sort | uniq -c | sort -nr
+# parses an Apache log file and displays the IP and HTTP code for each visitor, along with the number of occurences.
+
+awk '{print $1,$9}' apache-access.log | sort | uniq -c | sort -nr
