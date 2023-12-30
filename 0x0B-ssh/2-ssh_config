@@ -1,0 +1,7 @@
+HOST 54.89.72.145
+        HOSTNAME 54.89.72.145
+        User ubuntu
+        IdentityFile ~/.ssh/school
+        PasswordAuthentication no
+        GSSAPIDelegateCredentials no
+        GSSAPIAuthentication yes
