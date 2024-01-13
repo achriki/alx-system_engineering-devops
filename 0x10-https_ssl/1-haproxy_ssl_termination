@@ -43,8 +43,8 @@ frontend my_frontend
 	default_backend alx_backend
 
 frontend http_front
-	bind *:433 ssl crt /etc/letsencrypt/live/www.js-slayer.tech/fullchain.pem
-	http-request add-header X-Forwarder-Proto https
+	bind *:433 ssl crt /etc/ssl/www.js-slayer.tech/www.js-slayer.tech.pem
+	http-request set-header X-Forwarder-Proto https
 	default_backend alx_backend
 
 backend alx_backend
