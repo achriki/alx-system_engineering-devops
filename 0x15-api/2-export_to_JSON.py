@@ -1,29 +1,31 @@
 #!/usr/bin/python3
-"""Exports data in the JSON format"""
+"""request an API and save results into json"""
+import json
+import sys
+import urllib.request as fetcher
+
 
 if __name__ == "__main__":
+    userid = str(sys.argv[1])
+    endpoint = 'https://jsonplaceholder.typicode.com'
+    name_url = f'/users/{userid}'
+    todos_url = f'{name_url}/todos'
 
-    import json
-    import requests
-    import sys
+    with fetcher.urlopen(endpoint + name_url) as res:
+        user_data = json.loads(res.read())
+    with fetcher.urlopen(endpoint + todos_url) as res:
+        todos_data = json.loads(res.read())
 
-    userId = sys.argv[1]
-    user = requests.get("https://jsonplaceholder.typicode.com/users/{}"
-                        .format(userId))
-    todos = requests.get('https://jsonplaceholder.typicode.com/todos')
-    todos = todos.json()
-
-    todoUser = {}
-    taskList = []
-
-    for task in todos:
-        if task.get('userId') == int(userId):
-            taskDict = {"task": task.get('title'),
-                        "completed": task.get('completed'),
-                        "username": user.json().get('username')}
-            taskList.append(taskDict)
-    todoUser[userId] = taskList
-
-    filename = userId + '.json'
-    with open(filename, mode='w') as f:
-        json.dump(todoUser, f)
+    result = {
+        userid: [
+            {
+                "task": todo["title"],
+                "completed": todo["completed"],
+                "username": user_data["username"]
+            }
+            for todo in todos_data
+        ]
+    }
+    with open(f'{userid}.json', 'x') as file:
+        file.write(json.dumps(result))
+        file.close()

@@ -1,23 +1,29 @@
 #!/usr/bin/python3
-"""Exports data in the CSV format"""
+"""request an API and save results into csv"""
+import csv
+import json
+import sys
+import urllib.request as fetcher
+
 
 if __name__ == "__main__":
-
-    import csv
-    import requests
-    import sys
-
-    userId = sys.argv[1]
-    user = requests.get("https://jsonplaceholder.typicode.com/users/{}"
-                        .format(userId))
-    name = user.json().get('username')
-    todos = requests.get('https://jsonplaceholder.typicode.com/todos')
-
-    filename = userId + '.csv'
-    with open(filename, mode='w') as f:
-        writer = csv.writer(f, delimiter=',', quotechar='"',
-                            quoting=csv.QUOTE_ALL, lineterminator='\n')
-        for task in todos.json():
-            if task.get('userId') == int(userId):
-                writer.writerow([userId, name, str(task.get('completed')),
-                                 task.get('title')])
+    userid = str(sys.argv[1])
+    endpoint = 'https://jsonplaceholder.typicode.com'
+    name_url = '/users/' + str(sys.argv[1])
+    todos_url = name_url + '/todos'
+    res = fetcher.urlopen(endpoint + name_url)
+    user = res.read()
+    userF = json.loads(user)
+    username = userF.get("name")
+    res = fetcher.urlopen(endpoint + todos_url)
+    todos = res.read()
+    todosF = json.loads(todos)
+    with open(userid + ".csv", 'x', newline='') as file:
+        writer = csv.writer(file, quotechar='"', quoting=csv.QUOTE_NONNUMERIC)
+        for el in todosF:
+            writer.writerow([
+                userid, userF.get("username"),
+                str(el.get("completed")),
+                el.get("title")
+                ])
+        file.close()
