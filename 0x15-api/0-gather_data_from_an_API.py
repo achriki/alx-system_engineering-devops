@@ -1,25 +1,37 @@
 #!/usr/bin/python3
-"""request an API"""
-import json
-import sys
-import urllib.request as fetcher
+
+"""
+Python script that, using a REST API, for a given employee ID,
+returns information about his/her TODO list progress.
+"""
+
+from requests import get
+from sys import argv
+
 
 if __name__ == "__main__":
-    endpoint = 'https://jsonplaceholder.typicode.com'
-    name_url = '/users/' + str(sys.argv[1])
-    todos_url = name_url + '/todos'
-    res = fetcher.urlopen(endpoint + name_url)
-    user = res.read()
-    userF = json.loads(user)
-    res = fetcher.urlopen(endpoint + todos_url)
-    todos = res.read()
-    todosF = json.loads(todos)
-    done = 0
-    todoDone = []
-    for el in todosF:
-        if (el.get("completed") is True):
-            todoDone.append("\t " + el.get("title"))
-            done += 1
-    print('Employee {} is done with tasks({}/{}):'.format(
-        userF["name"], done, len(todosF)))
-    print('{}'.format("\n".join(todoDone)))
+    response = get('https://jsonplaceholder.typicode.com/todos/')
+    data = response.json()
+    completed = 0
+    total = 0
+    tasks = []
+    response2 = get('https://jsonplaceholder.typicode.com/users')
+    data2 = response2.json()
+
+    for i in data2:
+        if i.get('id') == int(argv[1]):
+            employee = i.get('name')
+
+    for i in data:
+        if i.get('userId') == int(argv[1]):
+            total += 1
+
+            if i.get('completed') is True:
+                completed += 1
+                tasks.append(i.get('title'))
+
+    print("Employee {} is done with tasks({}/{}):".format(employee, completed,
+                                                          total))
+
+    for i in tasks:
+        print("\t {}".format(i))

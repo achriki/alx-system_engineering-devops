@@ -1,31 +1,41 @@
 #!/usr/bin/python3
-"""request an API and save results into json"""
-import json
-import sys
-import urllib.request as fetcher
 
+"""
+Python script that exports data in the JSON format.
+"""
+
+from requests import get
+from sys import argv
+import json
 
 if __name__ == "__main__":
-    userid = str(sys.argv[1])
-    endpoint = 'https://jsonplaceholder.typicode.com'
-    name_url = f'/users/{userid}'
-    todos_url = f'{name_url}/todos'
+    response = get('https://jsonplaceholder.typicode.com/todos/')
+    data = response.json()
 
-    with fetcher.urlopen(endpoint + name_url) as res:
-        user_data = json.loads(res.read())
-    with fetcher.urlopen(endpoint + todos_url) as res:
-        todos_data = json.loads(res.read())
+    row = []
+    response2 = get('https://jsonplaceholder.typicode.com/users')
+    data2 = response2.json()
 
-    result = {
-        userid: [
-            {
-                "task": todo["title"],
-                "completed": todo["completed"],
-                "username": user_data["username"]
-            }
-            for todo in todos_data
-        ]
-    }
-    with open(f'{userid}.json', 'x') as file:
-        file.write(json.dumps(result))
-        file.close()
+    for i in data2:
+        if i['id'] == int(argv[1]):
+            u_name = i['username']
+            id_no = i['id']
+
+    row = []
+
+    for i in data:
+
+        new_dict = {}
+
+        if i['userId'] == int(argv[1]):
+            new_dict['username'] = u_name
+            new_dict['task'] = i['title']
+            new_dict['completed'] = i['completed']
+            row.append(new_dict)
+
+    final_dict = {}
+    final_dict[id_no] = row
+    json_obj = json.dumps(final_dict)
+
+    with open(argv[1] + ".json",  "w") as f:
+        f.write(json_obj)
