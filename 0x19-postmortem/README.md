@@ -1,5 +1,9 @@
 # Postmortem Report
 
+<p align="center">
+<img src="https://raw.githubusercontent.com/MitaliSengupta/holberton-system_engineering-devops/master/0x19-postmortem/image.gif" width=100% height=100% />
+</p>
+
 ## Issue Summary
 
 - **Duration:** - March 5, 2024, 09:00 AM - March 6, 2024, 01:00 AM (UTC)
